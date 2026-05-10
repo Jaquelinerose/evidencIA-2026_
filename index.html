@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>evidencIA 2026 | La Salle La Paz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Patrick+Hand&family=Short+Stack&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ls-blue: #002d56;
+            --ls-red: #d9232a;
+            --ls-gold: #ffc600;
+            --paper-line: #e2e8f0;
+        }
+
+        body {
+            background-color: #f1f5f9; /* Fondo grisáceo de escritorio */
+            /* Patrón de hoja cuadriculada */
+            background-image: 
+                linear-gradient(var(--paper-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+            background-size: 30px 30px;
+            font-family: 'Patrick Hand', cursive;
+            color: var(--ls-blue);
+            padding: 20px;
+        }
+
+        .notebook-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 95vh;
+            border-radius: 4px;
+            box-shadow: 
+                5px 5px 0px rgba(0,0,0,0.05),
+                15px 15px 30px rgba(0,0,0,0.1);
+            /* Margen rojo de carpeta escolar */
+            border-left: 50px solid #ff7675;
+            position: relative;
+            padding: 40px 40px 40px 60px;
+        }
+
+        /* Agujeros de la carpeta */
+        .notebook-page::before {
+            content: "";
+            position: absolute;
+            left: -35px;
+            top: 0; bottom: 0;
+            width: 20px;
+            background-image: radial-gradient(circle, #f1f5f9 8px, transparent 9px);
+            background-size: 100% 60px;
+        }
+
+        .script-font { font-family: 'Indie Flower', cursive; }
+        
+        .sticker-val {
+            background: #fff;
+            padding: 6px 15px;
+            border: 2px solid #edf2f7;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.05);
+            display: inline-block;
+        }
+
+        input, select, textarea {
+            border: 1px solid #cbd5e1 !important;
+            border-bottom: 2px solid #94a3b8 !important;
+            border-radius: 4px !important;
+            padding: 10px !important;
+            font-family: 'Short Stack', cursive;
+            background: #fffdfa !important;
+        }
+
+        .btn-ls {
+            background: var(--ls-blue);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 900;
+            box-shadow: 0 4px 0 #001224;
+            transition: all 0.2s;
+        }
+
+        .btn-ls:active:not(:disabled) {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        .card-evidencia {
+            background: #fffdf7;
+            border: 1px solid #e2e8f0;
+            border-left: 6px solid var(--ls-blue);
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .card-evidencia::after {
+            content: "📌";
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            font-size: 20px;
+        }
+
+        #toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--ls-blue);
+            color: white;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: none;
+            z-index: 1000;
+        }
+
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1s steps(5, end) infinite;
+        }
+        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } }
+    </style>
+</head>
+<body>
+
+    <div id="toast">Enlace copiado satisfactoriamente</div>
+
+    <div class="notebook-page">
+        
+        <!-- HEADER -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-12 border-b-2 border-gray-100 pb-6">
+            <div class="flex items-center gap-4 mb-4 md:mb-0">
+                <div class="w-16 h-16 bg-blue-900 rounded flex items-center justify-center shadow-lg">
+                    <span class="text-white font-black text-2xl">LS</span>
+                </div>
+                <div>
+                    <h1 class="text-4xl font-bold text-blue-900 script-font">evidenc<span class="text-red-600">IA</span> 2026</h1>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Acompañamiento Docente • La Paz</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="copyLink()" class="text-xs font-bold border-2 border-blue-900 px-4 py-2 rounded hover:bg-blue-900 hover:text-white transition">
+                    🔗 COMPARTIR PORTAFOLIO
+                </button>
+                <div class="bg-yellow-400 px-3 py-1 rounded text-[10px] font-black">TODO ESTÁ CONECTADO</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <!-- COLUMNA REGISTRO -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                    <h2 class="text-xl font-bold mb-4 flex items-center border-b border-slate-200 pb-2">
+                        <span class="mr-2">📝</span> NOTA DEL DÍA
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[11px] font-black mb-1">ESTUDIANTE:</label>
+                            <input type="text" id="nombre" class="w-full" placeholder="Nombre completo...">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[11px] font-black mb-1">ÁREA:</label>
+                                <select id="area" class="w-full">
+                                    <option>Lectoescritura</option>
+                                    <option>Matemáticas</option>
+                                    <option>Socioemocional</option>
+                                    <option>Conducta</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-black mb-1">PRIORIDAD:</label>
+                                <select id="alerta" class="w-full">
+                                    <option value="Verde">Verde (Normal)</option>
+                                    <option value="Amarillo">Amarillo (Alerta)</option>
+                                    <option value="Rojo">Rojo (Urgente)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-black mb-1">OBSERVACIÓN CLAVE:</label>
+                            <textarea id="obs" class="w-full" rows="4" placeholder="Describe lo observado hoy..."></textarea>
+                        </div>
+
+                        <button id="btnGuardar" class="btn-ls w-full disabled:opacity-50">
+                            <span id="btnLabel">GUARDAR Y ANALIZAR</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 pt-4">
+                    <span class="sticker-val rotate-[-2deg]">✨ Fe</span>
+                    <span class="sticker-val rotate-[1deg]">⚖️ Justicia</span>
+                    <span class="sticker-val rotate-[-1deg]">🤝 Fraternidad</span>
+                    <span class="sticker-val rotate-[3deg]">🎁 Servicio</span>
+                </div>
+            </div>
+
+            <!-- COLUMNA HISTORIAL -->
+            <div class="lg:col-span-7">
+                <h2 class="text-2xl font-bold mb-6 script-font text-blue-900 border-b-2 border-yellow-400 inline-block">
+                    📂 Mi Bitácora de Evidencias
+                </h2>
+
+                <div id="historial" class="space-y-6 max-h-[650px] overflow-y-auto pr-4">
+                    <div class="text-center py-20 opacity-20 italic">Cargando registros...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const apiKey = ""; 
+
+        let user = null;
+
+        window.copyLink = () => {
+            const el = document.createElement('input');
+            el.value = window.location.href;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
+        };
+
+        onAuthStateChanged(auth, (u) => {
+            if (u) {
+                user = u;
+                loadData();
+            } else {
+                signInAnonymously(auth);
+            }
+        });
+
+        async function analyzeIA(obs, area) {
+            const prompt = `Analiza como psicopedagogo: "${obs}" en "${area}". Genera JSON: {"maestro":"...","familia":"..."}. Máximo 25 palabras cada uno.`;
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+                const data = await res.json();
+                return JSON.parse(data.candidates[0].content.parts[0].text);
+            } catch (e) {
+                return { maestro: "Seguir observando.", familia: "Diálogo en casa." };
+            }
+        }
+
+        document.getElementById('btnGuardar').onclick = async () => {
+            const nombre = document.getElementById('nombre').value;
+            const obs = document.getElementById('obs').value;
+            const area = document.getElementById('area').value;
+            const alerta = document.getElementById('alerta').value;
+
+            if (!nombre || !obs || !user) return;
+
+            const btn = document.getElementById('btnGuardar');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-dots">ANALIZANDO</span>';
+
+            const plan = await analyzeIA(obs, area);
+
+            await addDoc(collection(db, 'artifacts', appId, 'users', user.uid, 'evidencias'), {
+                nombre, obs, area, alerta, plan,
+                fecha: serverTimestamp()
+            });
+
+            document.getElementById('nombre').value = '';
+            document.getElementById('obs').value = '';
+            btn.disabled = false;
+            btn.innerHTML = 'GUARDAR Y ANALIZAR';
+        };
+
+        function loadData() {
+            onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'evidencias'), (snap) => {
+                const container = document.getElementById('historial');
+                container.innerHTML = '';
+                
+                let docs = [];
+                snap.forEach(d => docs.push(d.data()));
+                docs.sort((a,b) => (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0));
+
+                docs.forEach(item => {
+                    const color = item.alerta === 'Rojo' ? 'text-red-600' : item.alerta === 'Amarillo' ? 'text-yellow-600' : 'text-green-600';
+                    container.innerHTML += `
+                        <div class="card-evidencia">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold">${item.nombre}</h3>
+                                <span class="text-[10px] font-black uppercase ${color}">${item.alerta}</span>
+                            </div>
+                            <p class="text-[11px] font-bold text-blue-900 mb-2 uppercase">${item.area} • ${item.fecha ? new Date(item.fecha.toMillis()).toLocaleDateString() : 'Hoy'}</p>
+                            <p class="text-sm italic mb-4">"${item.obs}"</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-blue-50 p-3 rounded text-[11px]">
+                                    <strong class="block text-blue-800">💡 MAESTRO:</strong> ${item.plan?.maestro}
+                                </div>
+                                <div class="bg-red-50 p-3 rounded text-[11px]">
+                                    <strong class="block text-red-800">🏠 FAMILIA:</strong> ${item.plan?.familia}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                if(docs.length === 0) {
+                    container.innerHTML = '<div class="text-center py-20 opacity-30 italic">No hay registros guardados.</div>';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
